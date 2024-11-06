@@ -1,0 +1,89 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Scanner;
+public class StudentManagement {
+// JDBC URL for UCanAccess
+private static final String JDBC_URL = "jdbc:ucanaccess://C:\\Users\\24CS\\Documents\\students.accdb";
+public static void main(String[] args) {
+// JDBC variables for opening, managing, and closing the connection
+Connection connection = null;
+Statement statement = null;
+Scanner scanner = new Scanner(System.in);
+try {
+// Establishing the connection
+connection = DriverManager.getConnection(JDBC_URL);
+statement = connection.createStatement();
+// Menu for user interaction
+while (true) {
+System.out.println("Choose an option:");
+System.out.println("1. Add Student");
+System.out.println("2. Update Student");
+System.out.println("3. Delete Student");
+System.out.println("4. View All Students");
+System.out.println("5. Exit");
+int choice = scanner.nextInt();
+scanner.nextLine(); // Consume newline
+switch (choice) {
+case 1: // Add Student
+System.out.print("Enter student name: ");
+String name = scanner.nextLine();
+System.out.print("Enter student age: ");
+int age = scanner.nextInt();
+String insertSQL = String.format("INSERT INTO students (name, age) VALUES ('%s', %d)", name, age);
+statement.executeUpdate(insertSQL);
+System.out.println("Student added successfully.");
+break;
+case 2: // Update Student
+System.out.print("Enter student ID to update: ");
+int updateId = scanner.nextInt();
+scanner.nextLine(); // Consume newline
+System.out.print("Enter new name: ");
+String newName = scanner.nextLine();
+System.out.print("Enter new age: ");
+int newAge = scanner.nextInt();
+String updateSQL = String.format("UPDATE students SET name='%s', age=%d WHERE id=%d", newName, newAge, updateId);
+statement.executeUpdate(updateSQL);
+System.out.println("Student updated successfully.");
+break;
+case 3: // Delete Student
+System.out.print("Enter student ID to delete: ");
+int deleteId = scanner.nextInt();
+String deleteSQL = String.format("DELETE FROM students WHERE id=%d", deleteId);
+statement.executeUpdate(deleteSQL);
+System.out.println("Student deleted successfully.");
+break;
+case 4: // View All Students
+String selectSQL = "SELECT id, name, age FROM students";
+ResultSet resultSet = statement.executeQuery(selectSQL);
+System.out.println("ID\tName\tAge");
+while (resultSet.next()) {
+int id = resultSet.getInt("id");
+String studentName = resultSet.getString("name");
+int studentAge = resultSet.getInt("age");
+System.out.printf("%d\t%s\t%d%n", id, studentName, studentAge);
+}
+break;
+case 5: // Exit
+System.out.println("Exiting...");
+scanner.close();
+return;
+default:
+System.out.println("Invalid choice. Please try again.");
+}
+}
+} catch (SQLException e) {
+e.printStackTrace();
+} finally {
+// Closing the resources
+try {
+if (statement != null) statement.close();
+if (connection != null) connection.close();
+} catch (SQLException e) {
+e.printStackTrace();
+}
+}
+}
+}

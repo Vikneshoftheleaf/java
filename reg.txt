@@ -1,0 +1,70 @@
+package com.mycompany.registrationform;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+public class RegistrationForm extends JFrame implements ActionListener {
+private JTextField nameField, emailField, passwordField;
+private JRadioButton maleRadio, femaleRadio;
+private JCheckBox termsCheckBox;
+private JButton submitButton;
+public RegistrationForm() {
+// Create the frame
+setTitle("Registration Form");
+setSize(400, 400);
+setDefaultCloseOperation(EXIT_ON_CLOSE);
+setLayout(new GridLayout(6, 2));
+// Name Field
+add(new JLabel("Name:"));
+nameField = new JTextField();
+add(nameField);
+// Email Field
+add(new JLabel("Email:"));
+emailField = new JTextField();
+add(emailField);
+// Password Field
+add(new JLabel("Password:"));
+passwordField = new JPasswordField();
+add(passwordField);
+// Gender Selection
+add(new JLabel("Gender:"));
+JPanel genderPanel = new JPanel();
+maleRadio = new JRadioButton("Male");
+femaleRadio = new JRadioButton("Female");
+ButtonGroup genderGroup = new ButtonGroup();
+genderGroup.add(maleRadio);
+genderGroup.add(femaleRadio);
+genderPanel.add(maleRadio);
+genderPanel.add(femaleRadio);
+add(genderPanel);
+// Terms and Conditions Checkbox
+termsCheckBox = new JCheckBox("I agree to the Terms and Conditions");
+add(termsCheckBox);
+// Submit Button
+submitButton = new JButton("Submit");
+submitButton.addActionListener(this);
+add(submitButton);
+}
+@Override
+public void actionPerformed(ActionEvent e) {
+if (e.getSource() == submitButton) {
+String name = nameField.getText();
+String email = emailField.getText();
+String password = passwordField.getText(); // Use getPassword() for JPasswordField
+String gender = maleRadio.isSelected() ? "Male" : "Female";
+boolean termsAccepted = termsCheckBox.isSelected();
+if (termsAccepted) {
+JOptionPane.showMessageDialog(this, "Registration Successful!\n" +
+"Name: " + name + "\nEmail: " + email + "\nGender: " + gender);
+} else {
+JOptionPane.showMessageDialog(this, "You must agree to the terms and conditions.");
+}
+}
+}
+public static void main(String[] args) {
+SwingUtilities.invokeLater(() -> {
+RegistrationForm form = new RegistrationForm();
+form.setVisible(true);
+});
+}
+}

@@ -1,0 +1,51 @@
+package com.mycompany.evenoddrmiprogram;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
+import java.util.Scanner;
+// Remote Interface
+interface EvenOddService extends Remote {
+boolean isEven(int number) throws RemoteException;
+}
+// Implementation of Remote Interface
+class EvenOddServiceImpl extends UnicastRemoteObject implements EvenOddService {
+protected EvenOddServiceImpl() throws RemoteException {
+super();
+}
+@Override
+public boolean isEven(int number) throws RemoteException {
+return number % 2 == 0;
+}
+}
+// RMI Server and Client in a Single Program
+public class EvenOddRMIProgram {
+public static void main(String[] args) {
+try {
+// Start the RMI registry
+LocateRegistry.createRegistry(1099);
+// Create and bind the remote object
+EvenOddServiceImpl evenOddService = new EvenOddServiceImpl();
+Naming.rebind("EvenOddService", evenOddService);
+System.out.println("EvenOdd Service is running...");
+// Create a Scanner object for user input
+Scanner scanner = new Scanner(System.in);
+// Get a number from the user
+System.out.print("Enter a number to check if it is even or odd: ");
+int number = scanner.nextInt();
+// Lookup the remote object and call the remote method
+EvenOddService service = (EvenOddService) Naming.lookup("EvenOddService");
+boolean isEven = service.isEven(number);
+// Print the result
+if (isEven) {
+System.out.println(number + " is even.");
+} else {
+System.out.println(number + " is odd.");
+}
+scanner.close();
+} catch (Exception e) {
+e.printStackTrace();
+}
+}
+}

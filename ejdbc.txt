@@ -1,0 +1,43 @@
+package jdbc;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+public class Jdbc {
+public static void main(String[] args) {
+// JDBC URL for UCanAccess
+String jdbcUrl = "jdbc:ucanaccess://C:\\Users\\24CS\\Documents\\employees.accdb";
+// JDBC variables for opening, managing, and closing the connection
+Connection connection = null;
+Statement statement = null;
+ResultSet resultSet = null;
+try {
+// Establishing the connection
+connection = DriverManager.getConnection(jdbcUrl);
+// Creating a Statement object to execute the query
+statement = connection.createStatement();
+// Executing a query
+String sql = "SELECT id, name, position FROM employees";
+resultSet = statement.executeQuery(sql);
+// Processing the results
+while (resultSet.next()) {
+int id = resultSet.getInt("id");
+String name = resultSet.getString("name");
+String position = resultSet.getString("position");
+System.out.printf("ID: %d, Name: %s, Position: %s%n", id, name, position);
+}
+} catch (SQLException e) {
+e.printStackTrace();
+} finally {
+// Closing the resources
+try {
+if (resultSet != null) resultSet.close();
+if (statement != null) statement.close();
+if (connection != null) connection.close();
+} catch (SQLException e) {
+e.printStackTrace();
+}
+}
+}
+}

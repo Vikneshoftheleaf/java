@@ -1,0 +1,48 @@
+package com.mycompany.factorialrmi;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
+import java.util.Scanner;
+// Remote Interface
+interface FactorialService extends Remote {
+long factorial(int n) throws RemoteException;
+}
+// Implementation of Remote Interface
+class FactorialServiceImpl extends UnicastRemoteObject implements FactorialService {
+protected FactorialServiceImpl() throws RemoteException {
+super();
+}
+@Override
+public long factorial(int n) throws RemoteException {
+if (n < 0) throw new IllegalArgumentException("Number must be non-negative");
+return (n == 0) ? 1 : n * factorial(n - 1);
+}
+}
+// RMI Server and Client in a Single Program
+public class FactorialRMI {
+public static void main(String[] args) {
+try {
+// Start the RMI registry
+LocateRegistry.createRegistry(1099);
+// Create and bind the remote object
+FactorialServiceImpl factorialService = new FactorialServiceImpl();
+Naming.rebind("FactorialService", factorialService);
+System.out.println("Factorial Service is running...");
+// Create a Scanner object for user input
+Scanner scanner = new Scanner(System.in);
+// Get a number from the user
+System.out.print("Enter a number to calculate its factorial: ");
+int number = scanner.nextInt();
+// Lookup the remote object and call the remote method
+FactorialService service = (FactorialService) Naming.lookup("FactorialService");
+long result = service.factorial(number);
+// Print the result
+System.out.println("Factorial of " + number + " is " + result);
+scanner.close();
+} catch (Exception e) {
+e.printStackTrace();
+}
+}
+}

@@ -1,0 +1,85 @@
+package com.mycompany.advancedcalculator;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+public class AdvancedCalculator extends JFrame implements ActionListener {
+private JTextField display;
+private String operator;
+private double num1, num2;
+public AdvancedCalculator() {
+// Create the frame
+setTitle("Advanced Calculator");
+setSize(400, 600);
+setDefaultCloseOperation(EXIT_ON_CLOSE);
+setLayout(new BorderLayout());
+// Create the display
+display = new JTextField();
+display.setEditable(false);
+display.setFont(new Font("Arial", Font.PLAIN, 24));
+add(display, BorderLayout.NORTH);
+// Create the buttons
+JPanel buttonPanel = new JPanel();
+buttonPanel.setLayout(new GridLayout(5, 4));
+String[] buttons = {
+"7", "8", "9", "/",
+"4", "5", "6", "*",
+"1", "2", "3", "-",
+"0", "C", "=", "+",
+"√", "sin", "cos", "tan",
+"^", "(", ")"
+};
+for (String text : buttons) {
+JButton button = new JButton(text);
+button.addActionListener(this);
+buttonPanel.add(button);
+}
+add(buttonPanel, BorderLayout.CENTER);
+}
+@Override
+public void actionPerformed(ActionEvent e) {
+String command = e.getActionCommand();
+if (command.charAt(0) >= '0' && command.charAt(0) <= '9') {
+display.setText(display.getText() + command);
+} else if (command.equals("C")) {
+display.setText("");
+operator = "";
+} else if (command.equals("=")) {
+num2 = Double.parseDouble(display.getText());
+display.setText(calculate(num1, num2, operator));
+operator = "";
+} else if (command.equals("√")) {
+num1 = Double.parseDouble(display.getText());
+display.setText(Double.toString(Math.sqrt(num1)));
+} else if (command.equals("sin")) {
+num1 = Double.parseDouble(display.getText());
+display.setText(Double.toString(Math.sin(Math.toRadians(num1))));
+} else if (command.equals("cos")) {
+num1 = Double.parseDouble(display.getText());
+display.setText(Double.toString(Math.cos(Math.toRadians(num1))));
+} else if (command.equals("tan")) {
+num1 = Double.parseDouble(display.getText());
+display.setText(Double.toString(Math.tan(Math.toRadians(num1))));
+} else {
+if (!operator.isEmpty()) return; // Prevent multiple operators
+num1 = Double.parseDouble(display.getText());
+operator = command;
+display.setText("");
+}
+}
+private String calculate(double num1, double num2, String operator) {
+return switch (operator) {
+case "+" -> Double.toString(num1 + num2);
+case "-" -> Double.toString(num1 - num2);
+case "*" -> Double.toString(num1 * num2);
+case "/" -> num2 != 0 ? Double.toString(num1 / num2) : "Error";
+case "^" -> Double.toString(Math.pow(num1, num2));
+default -> "Error";
+};
+}
+public static void main(String[] args) {
+SwingUtilities.invokeLater(() -> {
+AdvancedCalculator calculator = new AdvancedCalculator();
+calculator.setVisible(true);
+});
+} }
