@@ -1,0 +1,30 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sort Array of Numbers</title>
+</head>
+<body>
+<h1>Sort Array of Numbers</h1>
+<input type="text" id="numberArray" placeholder="Enter numbers separated by commas">
+<button id="sortAscending">Sort Ascending</button>
+<button id="sortDescending">Sort Descending</button>
+<h2>Sorted Array:</h2>
+<p id="result"></p>
+<script>
+document.getElementById('sortAscending').addEventListener('click', function() {
+const input = document.getElementById('numberArray').value;
+sorted_in = input.split(",").map(Number)
+sorted = sorted_in.sort((a,b)=>a-b)
+document.getElementById("result").textContent = sorted.join(",")
+
+});
+document.getElementById('sortDescending').addEventListener('click', function() {
+const input = document.getElementById('numberArray').value;
+const numberArray = input.split(',').map(Number);
+const sortedArray = numberArray.sort((a, b) => b - a);
+document.getElementById('result').textContent = sortedArray.join(', ');
+});
+</script>
+</body>
+</html>

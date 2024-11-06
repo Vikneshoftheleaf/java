@@ -1,0 +1,38 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cylinder Drawing</title>
+<style>
+canvas {
+border: 1px solid #000;
+}
+</style>
+</head>
+<body>
+<h1>Draw a Cylinder</h1>
+<canvas id="cid" height="400" width="400"></canvas>
+<script>
+const canvas  = document.getElementById("cid")
+const ctx = canvas.getContext("2d")
+function drawCircle(x,y,radius,height)
+{
+// Draw the top ellipse
+ctx.beginPath()
+ctx.ellipse(x,y,radius,radius/2,0,0,Math.PI*2)
+ctx.fillStyle = "lightblue"
+ctx.fill()
+ctx.closePath()
+ctx.fillStyle = "lightgray"
+ctx.fillRect(x - radius,y,radius*2,height)
+ctx.beginPath()
+ctx.ellipse(x,y+height,radius,radius/2,0,0,Math.PI*2)
+ctx.fillStyle = "lightblue"
+ctx.fill()
+ctx.closePath()
+
+}
+drawCircle(200,50,50,150)
+</script>
+</body>
+</html>
